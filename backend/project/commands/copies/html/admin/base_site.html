@@ -1,0 +1,22 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+<link rel="stylesheet" href="/static/styles/includes/header.css">
+<link rel="stylesheet" href="/static/styles/models/flex.css">
+<h1 id="head" style="display: inline-block;">
+    <a href="/admin">
+        <div class="logo sb-x">
+            <img src="/media/assets/global/logo.png" alt="logo" id="dracula-logo">
+            <div class="logo-title">
+                <h1 class="word-1">CODE</h1>
+                <h1 class="word-2">PORTAL</h1>
+            </div>
+        </div>
+    </a>
+</h1>
+{%endblock%}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="/static/styles/core/admin.css">
+{% endblock %}

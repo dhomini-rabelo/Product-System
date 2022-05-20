@@ -1,0 +1,66 @@
+.message-animation-content{
+    overflow-x: hidden;
+}
+.django-message{
+    padding: 0.8rem 0.4rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    min-width: 50%;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    transform: translateX(100vw);
+    width: 100%;
+    animation-duration: 10s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+    animation-name: messageAnimation;
+}
+.django-message p{
+    font-size: 0.8rem;
+    word-spacing: -0.2rem;
+}
+.django-message img{
+    width: 0.7rem;
+    position: relative;
+    top: 0.05rem;
+    margin-right: 0.1rem;
+}
+.django-message.success{
+    background-color: rgb(150, 253, 146);
+    border: 2px solid green;
+}
+.django-message.success p{
+    color: black;
+}
+.django-message.error{
+    background-color: rgb(240, 137, 137);
+    border: 2px solid rgb(131, 19, 19);
+}
+.django-message.error p{
+    color: rgb(131, 19, 19);
+}
+@keyframes messageAnimation {
+    10% {
+        transform: translateX(0);
+    }
+    90% {
+        transform: translateX(0);
+    }
+    97% {
+        transform: translateX(100vw);
+    }
+    99% {
+        transform: translateX(100vw);
+        opacity: 1;
+        display: block;
+        position: initial;
+        z-index: 0;
+    }
+    100%{
+        opacity: 0;
+        display: none;
+        position: fixed;
+        z-index: -5;
+    }
+}

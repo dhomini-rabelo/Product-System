@@ -1,0 +1,44 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Fira Code', Arial, Helvetica, sans-serif;
+  user-select: none;
+
+}
+input[type=number]::-webkit-inner-spin-button { 
+  -webkit-appearance: none;
+}
+input[type=number] { 
+ -moz-appearance: textfield;
+ appearance: textfield;
+
+}
+input{
+  outline: none;
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
+}
+input[type="checkbox"]{
+  cursor: pointer;
+}
+button:hover{
+  cursor: pointer;
+}
+.flex{
+  display: flex !important;
+}
+.invisible{
+  display: none !important;
+}
+.visible{
+  display: block !important;
+}
+.inline{
+  display: inline-block !important;
+}

@@ -1,0 +1,15 @@
+.error{
+    margin-top: 0.15rem;
+    display: flex;
+    min-height: 18.5px;
+}
+.error img{
+    width: 0.7rem;
+    position: relative;
+    top: 0.075rem;
+    margin-right: 0.15rem;
+}
+.error-message{
+    color: rgb(210, 53, 53); 
+    font-size: 0.75rem;
+}
