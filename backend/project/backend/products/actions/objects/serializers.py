@@ -15,6 +15,13 @@ class PriceMediatorForProductSerializer(serializers.ModelSerializer):
         fields = 'id', 'provider', 'price'
 
 
+class PriceMediatorSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = PriceMediator
+        fields = 'id', 'provider', 'price', 'product'
+
+
 class CategorySerializer(serializers.ModelSerializer):
     
     class Meta:
