@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'backend.accounts.app.AccountsConfig',
     # Others apps
     'commands.CommandsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
