@@ -14,7 +14,7 @@ def simplification(obj_name: str):
         return simplified_name
 
 
-def get_type(obj: Any):
+def get_type_name(obj: Any):
     str_type = str(type(obj))
     initial_position = str_type.find("'")
     end_position = str_type[initial_position+1:].find("'") + len(str_type[: initial_position+1])

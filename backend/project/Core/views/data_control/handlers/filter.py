@@ -61,7 +61,7 @@ class FilterForQueryset:
 
 
 
-class FilterQuerysetWithoutMediator(FilterForQueryset):
+class FilterForQuerysetWithoutMediator(FilterForQueryset):
 
     def __init__(self, models: dict = {}):
         self.models = models # request.body models
