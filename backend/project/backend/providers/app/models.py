@@ -1,4 +1,4 @@
-from django.db.models import (Model, CharField, DateTimeField, TextField, EmailField, ForeignKey, PositiveIntegerField, ImageField, RESTRICT, DecimalField, DateField, BooleanField, SET_NULL, CASCADE)
+from django.db.models import (Model, CharField, DateTimeField, TextField, EmailField, ForeignKey, PositiveIntegerField, ImageField, RESTRICT, DecimalField, DateField, BooleanField, SET_NULL, CASCADE, OneToOneField)
 
 
 class Address(Model):
@@ -8,9 +8,9 @@ class Address(Model):
 
 class Provider(Model):
     name = CharField(max_length=200, unique=True)
-    social_role = TextField()
+    social_role = TextField(blank=True, null=True)
     cnpj = CharField(max_length=18)
-    address = ForeignKey(Address, on_delete=SET_NULL, null=True)
+    address = OneToOneField(Address, on_delete=SET_NULL, null=True)
 
 
 class Contact(Model):
