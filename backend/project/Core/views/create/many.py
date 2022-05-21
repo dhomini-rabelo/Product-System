@@ -84,5 +84,4 @@ class SerializerSupport:
     ) -> Model: # for foreign key
         for obj in data:
             adapted_kwargs = {k: obj.get(v)  for k, v in pk_kwargs.items()}
-            print(adapted_kwargs)
             self.error_or_update_instance(obj, queryset, adapted_kwargs, error_obj)

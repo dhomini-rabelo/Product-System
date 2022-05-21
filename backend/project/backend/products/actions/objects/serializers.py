@@ -62,13 +62,11 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
     def update(self, instance, validated_data):
         category_data = validated_data.pop('category')
         del validated_data['providers']
-        providers_data = [
-            {
-                'id': provider.get('id'), 'provider_id': provider['provider'], 
-                'product_id': instance.id, 'price': provider['price'],
-                'provider': None, 'product': None, 
-            }  for provider in self.initial_data['providers']
-        ]
+        providers_data = [{
+            'id': provider.get('id'), 'provider_id': provider['provider'], 
+            'product_id': instance.id, 'price': provider['price'],
+            'provider': None, 'product': None, 
+        }  for provider in self.initial_data['providers']]
 
         category = self.get_or_error_for_category(category_data)
         for attribute_name, value in validated_data.items():
