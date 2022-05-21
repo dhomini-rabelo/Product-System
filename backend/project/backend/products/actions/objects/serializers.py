@@ -5,6 +5,8 @@ from backend.products.app.models import Category, PriceMediator, Product
 
 
 class PriceMediatorForProductSerializer(serializers.ModelSerializer):
+    # disable require validation because works with ProductSerializer
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), required=False)
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -25,6 +27,8 @@ class PriceMediatorSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    # disable unique validation because works with ProductSerializer
+    name = serializers.CharField(max_length=200, validators=[])
     
     class Meta:
         model = Category

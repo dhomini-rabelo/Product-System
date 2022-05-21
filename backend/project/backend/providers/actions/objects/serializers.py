@@ -6,6 +6,7 @@ from backend.providers.app.models import Contact, Provider, Address
 
 
 class PriceMediatorForProviderSerializer(serializers.ModelSerializer):
+    # disable require validation because works with ProviderSerializer
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), required=False)
 
     def to_representation(self, instance):
@@ -27,6 +28,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    # disable require validation because works with ProviderSerializer
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), required=False)
     
     def to_representation(self, instance):
