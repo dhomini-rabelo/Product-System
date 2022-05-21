@@ -1,3 +1,4 @@
+from types import FunctionType
 from venv import create
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
@@ -46,6 +47,23 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     contacts = ContactSerializer(many=True)
     products = PriceMediatorForProviderSerializer(many=True)
 
+    def error_or_update_instance_for_address(self, address_data: dict, instance):
+        return self.error_or_update_instance(
+            address_data, Address.objects.all(), {'id': instance.address.id}, {'address': ['Id not found']}
+        )
+
+    def error_or_update_many_for_contacts(self, contacts_data: dict):
+        return self.error_or_update_many(
+            contacts_data, Contact.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
+            {'contacts': ['Id not found or id is none']}
+        )
+
+    def error_or_update_many_for_products(self, products_data: dict):
+        return self.error_or_update_many(
+            products_data, PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
+            {'products': ['Id not found or id is none']}
+        )
+
     def create(self, validated_data):
         # data input
         address_data = validated_data.pop('address')
@@ -66,34 +84,46 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
         return instance
 
     def update(self, instance, validated_data):
-        address_data = validated_data.pop('address')
-        del validated_data['contacts']
-        del validated_data['products']
-        contacts_data = [{
-            'id': contact.get('id'), 'number': contact['number'], 'provider_id': instance.id,
-        }  for contact in self.initial_data['contacts']]
-        products_data = [{
-            'id': product.get('id'), 'product_id': product['product'], 'price': product['price'], 'provider_id': instance.id,
-        }  for product in self.initial_data['products']]
+        if self.partial: return self.update_partial(instance, validated_data)
+        related_fields_data, validated_data = self.get_data(instance, validated_data)
+        self.update_instance(instance, {**validated_data, 'address': self.error_or_update_instance_for_address(related_fields_data['address'], instance)})
+        self.error_or_update_many_for_contacts(related_fields_data['contacts'])
+        self.error_or_update_many_for_products(related_fields_data['products'])
+        return instance
 
-        address = self.error_or_update_instance(address_data, Address.objects.all(), {'id': instance.address.id}, {'address': ['Id not found']})
+    def update_partial(self, instance, validated_data):
+        related_fields_data, validated_data = self.get_data(instance, validated_data)
+
         for attribute_name, value in validated_data.items():
             setattr(instance, attribute_name, value)
-        instance.address = address
-
+        if related_fields_data.get('address') is not None:
+            instance.address = self.error_or_update_instance_for_address(related_fields_data['address'], instance)
         instance.save()
 
-        self.error_or_update_many(
-            contacts_data, Contact.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
-            {'contacts': ['Id not found or id is none']}
-        )
+        if related_fields_data.get('products') not in [None, []]:
+            self.error_or_update_many_for_products(related_fields_data['products'])
+        if related_fields_data.get('contacts') not in [None, []]:
+            self.error_or_update_many_for_contacts(related_fields_data['contacts'])
+        return instance        
 
-        self.error_or_update_many(
-            products_data, PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
-            {'products': ['Id not found or id is none']}
-        )
+    def obj_for_get_related_field_data(self) -> dict:
+        def get_contacts(instance, validated_data):
+            contacts_data = [{
+                'id': contact.get('id'), 'number': contact['number'], 'provider_id': instance.id,
+            }  for contact in self.initial_data['contacts']]
+            return contacts_data
 
-        return instance
+        def get_products(instance, validated_data):
+            products_data = [{
+                'id': product.get('id'), 'product_id': product['product'], 'price': product['price'], 'provider_id': instance.id,
+            }  for product in self.initial_data['products']]
+            return products_data
+
+        return {
+            'address': lambda instance, validated_data : validated_data['address'],
+            'contacts': get_contacts,            
+            'products': get_products,            
+        }        
 
     class Meta:
         model = Provider
