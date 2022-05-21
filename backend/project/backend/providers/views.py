@@ -8,11 +8,10 @@ from backend.providers.actions.objects.data_control.provider.selector import pro
 
 class ProviderListAndCreate(DataControlAndCreateApi):
     serializer_class = ProviderSerializer
-    post_serializer_class = CreateProviderSerializer
     initial_queryset = Provider.objects.all()
     filter_function = provider_filter.filter_queryset
     selector_function = provider_selector.select
-
+    
 
 class ProviderDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CreateProviderSerializer

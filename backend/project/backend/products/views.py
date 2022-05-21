@@ -10,7 +10,6 @@ class ProductListAndCreate(DataControlAndCreateApi):
     filter_function = product_filter.filter_queryset
     selector_function = product_selector.select
     serializer_class = ProductSerializer
-    post_serializer_class = CreateProductSerializer
     initial_queryset = Product.objects.all()
 
 
