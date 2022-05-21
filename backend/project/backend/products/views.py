@@ -1,6 +1,6 @@
 from rest_framework import generics
 from Core.views.data_control.create import DataControlAndCreateApi
-from backend.products.actions.objects.serializers import CategorySerializer, PriceMediatorSerializer, ProductSerializer, CreateProductSerializer
+from backend.products.actions.objects.serializers import CategorySerializer, PriceMediatorSerializer, ProductSerializer
 from backend.products.app.models import Category, PriceMediator, Product
 from backend.products.actions.objects.data_control.filter import product_filter
 from backend.products.actions.objects.data_control.selector import product_selector
@@ -14,7 +14,7 @@ class ProductListAndCreate(DataControlAndCreateApi):
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CreateProductSerializer
+    serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
 

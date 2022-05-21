@@ -1,6 +1,6 @@
 from rest_framework import generics
 from Core.views.data_control.create import DataControlAndCreateApi
-from backend.providers.actions.objects.serializers import AddressSerializer, ContactSerializer, CreateProviderSerializer, ProviderSerializer
+from backend.providers.actions.objects.serializers import AddressSerializer, ContactSerializer, ProviderSerializer
 from backend.providers.app.models import Address, Contact, Provider
 from backend.providers.actions.objects.data_control.provider.filter import provider_filter
 from backend.providers.actions.objects.data_control.provider.selector import provider_selector
@@ -14,7 +14,7 @@ class ProviderListAndCreate(DataControlAndCreateApi):
     
 
 class ProviderDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CreateProviderSerializer
+    serializer_class = ProviderSerializer
     queryset = Provider.objects.all()
 
 
