@@ -1,9 +1,20 @@
+from types import FunctionType
 from rest_framework.serializers import ModelSerializer, ValidationError
 from django.db.models.query import QuerySet
 from django.db.models import Model
 
 
 class SerializerSupport:
+
+    def get_data(self, instance, validated_data: dict):
+        # require self.obj_for_get_related_field_data -> dict[FunctionType]
+        related_functions, related_fields_data = self.obj_for_get_related_field_data(), {}
+        for related_field in related_functions.keys():
+            if related_field not in validated_data.keys(): continue
+            get_data: FunctionType = related_functions[related_field]
+            related_fields_data[related_field] = get_data(instance, validated_data)
+            del validated_data[related_field]
+        return related_fields_data, validated_data
 
     def get_or_error(
         self, queryset: QuerySet, pk_kwargs: dict = {}, error_obj = {}
