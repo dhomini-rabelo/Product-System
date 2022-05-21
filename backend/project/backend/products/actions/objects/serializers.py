@@ -1,3 +1,5 @@
+from turtle import update
+from types import FunctionType
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
 from backend.products.app.models import Category, PriceMediator, Product
@@ -42,6 +44,12 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
     def get_or_error_for_category(self, category_data: dict):
         return self.get_or_error(Category.objects.all(), {'name__iexact': category_data.get('name')}, {'category': ['Category not found']})
 
+    def error_or_update_many_for_providers(self, providers_data: dict):
+        return self.error_or_update_many(
+            providers_data, PriceMediator.objects.all(), {'id': 'id', 'product__id': 'product_id'},
+            {'providers': ['Id not found or id is none']}
+        )
+
     def create(self, validated_data):
         # data input
         category_data = validated_data.pop('category')
@@ -60,27 +68,39 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
         return instance
 
     def update(self, instance, validated_data):
-        category_data = validated_data.pop('category')
-        del validated_data['providers']
-        providers_data = [{
-            'id': provider.get('id'), 'provider_id': provider['provider'], 
-            'product_id': instance.id, 'price': provider['price'],
-            'provider': None, 'product': None, 
-        }  for provider in self.initial_data['providers']]
+        if self.partial: return self.update_partial(instance, validated_data)
+        related_fields_data, validated_data = self.get_data(instance, validated_data)
+        self.update_instance(instance, {**validated_data, 'category': self.get_or_error_for_category(related_fields_data['category'])})
+        self.error_or_update_many_for_providers(related_fields_data['providers'])
+        return instance
 
-        category = self.get_or_error_for_category(category_data)
+    def update_partial(self, instance, validated_data):
+        related_fields_data, validated_data = self.get_data(instance, validated_data)
+
         for attribute_name, value in validated_data.items():
             setattr(instance, attribute_name, value)
-        instance.category = category
-
+        if related_fields_data.get('category') is not None:
+            instance.category = self.get_or_error_for_category(related_fields_data['category'])
         instance.save()
 
-        self.error_or_update_many(
-            providers_data, PriceMediator.objects.all(), {'id': 'id', 'product__id': 'product_id'},
-            {'providers': ['Id not found or id is none']}
-        )
+        if related_fields_data.get('providers') not in [None, []]:
+            self.error_or_update_many_for_providers(related_fields_data['providers'])
 
         return instance
+
+    def obj_for_get_related_field_data(self) -> dict:
+        def get_providers(instance, validated_data):
+            providers_data = [{
+                'id': provider.get('id'), 'provider_id': provider['provider'], 
+                'product_id': instance.id, 'price': provider['price'],
+                'provider': None, 'product': None, 
+            }  for provider in self.initial_data['providers']]
+            return providers_data
+
+        return {
+            'category': lambda instance, validated_data : validated_data['category'],
+            'providers': get_providers,            
+        }
 
     class Meta:
         model = Product
