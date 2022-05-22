@@ -1,13 +1,13 @@
 from django.db.models import (Model, CharField, DateTimeField, TextField, EmailField, ForeignKey, PositiveIntegerField, ImageField, RESTRICT, DecimalField, DateField, BooleanField, SET_NULL, CASCADE, OneToOneField)
 
 
+
 class Address(Model):
     cep = CharField(max_length=9) # XXXXX-XXX
     road = CharField(max_length=200)
     complement = CharField(max_length=200)
     neighborhood = CharField(max_length=200)
     number = CharField(max_length=20, blank=True, null=True)
-
 
 
 class Provider(Model):

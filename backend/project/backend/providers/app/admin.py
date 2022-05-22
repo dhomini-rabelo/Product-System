@@ -30,8 +30,8 @@ class ContactAdmin(admin.ModelAdmin):
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = 'id', 'city',
-    list_display_links = 'city',
+    list_display = 'id', 'road', 'number'
+    list_display_links = 'road', 'number'
     list_per_page = 50
-    ordering = 'city',
-    search_fields = 'city', # ^ -> startswith, = -> iexact, @ ->	search, None -> icontains
+    ordering = 'road',
+    search_fields = 'road', # ^ -> startswith, = -> iexact, @ ->	search, None -> icontains
