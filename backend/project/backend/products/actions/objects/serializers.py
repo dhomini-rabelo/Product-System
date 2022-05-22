@@ -1,6 +1,6 @@
 from django.forms import ValidationError
 from rest_framework import serializers
-from Core.views.create.many import SerializerSupport
+from Core.views.create.many import ManyChildSerializers
 from Core.views.create.name import AdaptDataSerializer
 from backend.products.app.models import Category, PriceMediator, Product
 from rest_framework.fields import empty
@@ -41,7 +41,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = 'id', 'name',
 
 
-class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
+class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
     providers = PriceMediatorForProductSerializer(many=True)
     category = CategorySerializer()
 

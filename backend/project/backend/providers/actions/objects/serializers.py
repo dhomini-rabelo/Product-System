@@ -1,6 +1,6 @@
 from django.forms import ValidationError
 from rest_framework import serializers
-from Core.views.create.many import SerializerSupport
+from Core.views.create.many import ManyChildSerializers
 from Core.views.create.name import AdaptDataSerializer
 from Core.views.create.validator import ValidatorSerializer
 from backend.products.app.models import PriceMediator, Product
@@ -69,7 +69,7 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = 'id', 'number', 'provider'
 
 
-class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
+class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers):
     address = AddressSerializer()
     contacts = ContactSerializer(many=True)
     products = PriceMediatorForProviderSerializer(many=True)
