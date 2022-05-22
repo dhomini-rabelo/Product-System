@@ -51,7 +51,7 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
     def error_or_update_many_for_providers(self, providers_data: list[dict]):
         return self.create_or_update_many(
             providers_data, PriceMediatorForProductSerializer, PriceMediator.objects.all(),
-            {'id': 'id', 'product__id': 'product_id'}
+            {'product__id': 'product_id', 'provider__id': 'provider_id'} # product does not repeat provider
         )
 
     def get_list_many_relationship(self):
@@ -100,9 +100,9 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
     def obj_for_get_related_field_data(self) -> dict:
         def get_providers(instance, validated_data):
             providers_data = [{
-                'id': provider.get('id'), 'provider_id': provider['provider'], 
+                'provider_id': provider['provider'], 
                 'product_id': instance.id, 'price': provider['price'],
-            }  for provider in self.initial_data['providers']]
+            }  for provider in validated_data]
             return providers_data
 
         return {

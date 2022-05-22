@@ -66,13 +66,13 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     def create_or_update_many_for_contacts(self, contacts_data: list[dict]):
         return self.create_or_update_many(
             contacts_data, ContactSerializer, Contact.objects.all(),
-            {'id': 'id', 'provider__id': 'provider_id'}, 
+            {'number': 'number', 'provider__id': 'provider_id'}, 
         )
 
     def create_or_update_many_for_products(self, products_data: list[dict]):
         return self.create_or_update_many(
-            products_data, PriceMediatorForProviderSerializer, 
-            PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'}
+            products_data, PriceMediatorForProviderSerializer, PriceMediator.objects.all(),
+            {'product__id': 'product_id', 'provider__id': 'provider_id'} # provider does not repeat product
         )
 
     def get_list_many_relationship(self):
@@ -148,14 +148,14 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     def obj_for_get_related_field_data(self) -> dict:
         def get_contacts(instance, validated_data):
             contacts_data = [{
-                'id': contact.get('id'), 'number': contact['number'], 'provider_id': instance.id,
-            }  for contact in self.initial_data['contacts']]
+                'number': contact['number'], 'provider_id': instance.id,
+            }  for contact in validated_data['contacts']]
             return contacts_data
 
         def get_products(instance, validated_data):
             products_data = [{
-                'id': product.get('id'), 'product_id': product['product'], 'price': product['price'], 'provider_id': instance.id,
-            }  for product in self.initial_data['products']]
+                'product_id': product['product'], 'price': product['price'], 'provider_id': instance.id,
+            }  for product in validated_data['products']]
             return products_data
 
         return {
