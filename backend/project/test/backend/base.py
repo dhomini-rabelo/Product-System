@@ -13,17 +13,18 @@ from backend.providers.app.models import Address, Provider
 class BaseClassForTest(TestCase):
 
     def create_models(self):
-        categories = [Category(name=name) for name in ['tecnologia', 'esporte', 'casa']]
-        Category.objects.bulk_create(categories)
+        self.categories = [Category(name=name) for name in ['tecnologia', 'esporte', 'casa', 'carro', 'ferramentas']]
+        Category.objects.bulk_create(self.categories)
 
-        providers, addresses, products = [], [], []
-        for i in range(1, 11):
+        self.providers, self.addresses, self.products = [], [], []
+        data_range = range(1, 11)
+        for i in data_range:
             n = lambda : randint(1, 99999999999999999999)
 
-            products.append(Product(
+            self.products.append(Product(
                 name=f'product {n()}',
                 description=f'product description {i}',
-                category=categories[randint(0, len(categories) - 1)]
+                category=self.categories[randint(0, len(self.categories) - 1)]
             ))
 
             provider = Provider(
@@ -41,19 +42,21 @@ class BaseClassForTest(TestCase):
             )
 
             provider.address = address
-            addresses.append(address)
-            providers.append(provider)
+            self.addresses.append(address)
+            self.providers.append(provider)
 
-        Address.objects.bulk_create(addresses)
-        Provider.objects.bulk_create(providers)
-        Product.objects.bulk_create(products)
+        Address.objects.bulk_create(self.addresses)
+        Provider.objects.bulk_create(self.providers)
+        Product.objects.bulk_create(self.products)
 
-        for i in range(1, 11):
-            PriceMediator.objects.create(
+        self.prices = []
+        for i in data_range:
+            self.prices.append(PriceMediator(
                 product_id=i,
                 provider_id=i,
                 price=Decimal(f'{randint(100, 100000)}.00')
-            )
+            ))
+        PriceMediator.objects.bulk_create(self.prices)
 
     def get_header(self):
         return {'content_type': 'application/json'}

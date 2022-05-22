@@ -20,7 +20,8 @@ class CategoryListAndCreateTest(BaseClassForTest):
         cls.create_models(cls)
         cls.client = Client()
         cls.header = cls.get_header(cls)
-        cls.path = reverse('products:category_list')
+        cls.pk = cls.categories[0].id
+        cls.path = reverse('products:category_detail', kwargs={'pk': cls.pk})
         cls.request = cls.client.get(cls.path, **cls.header)
         cls.valid_data = {
             'name': 'test',
@@ -30,16 +31,29 @@ class CategoryListAndCreateTest(BaseClassForTest):
         self.assertEqual(self.request.status_code, 200)
 
     def test_data(self):
-        serializer = CategorySerializer(Category.objects.all(), many=True)
+        serializer = CategorySerializer(Category.objects.get(id=self.pk))
         self.assertEqual(
             self.request.data,
             serializer.data
         )
 
-    def test_post_method(self):
-        request = self.client.post(self.path, data=self.valid_data, **self.header)
-        self.assertEqual(request.status_code, 201)
+    def test_put_method(self):
+        data = self.valid_data.copy()
+        request = self.client.put(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.data['name'], data['name'])
 
-    def test_error_required_name_field(self):
-        request = self.client.post(self.path, data={}, **self.header)
+    def test_patch_method(self):
+        data = {'name': 'patch'}
+        request = self.client.patch(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.data['name'], data['name'])
+
+    def test_delete_method(self):
+        path = reverse('products:category_detail', kwargs={'pk': self.categories[1].id})
+        request = self.client.delete(path, **self.header)
+        self.assertEqual(request.status_code, 204) # 204 - NO CONTENT
+
+    def test_put_error_required_name_field(self):
+        request = self.client.put(self.path, data={}, **self.header)
         self.assertEqual('This field is required.', str(request.data['name'][0]))
