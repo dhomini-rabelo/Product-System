@@ -8,7 +8,7 @@ from backend.providers.actions.objects.data_control.provider.selector import pro
 
 
 
-class ProviderListAndCreate(SimpleRenderer, DataControlAndCreateApi): # order is important
+class ProviderDataControlAndCreate(SimpleRenderer, DataControlAndCreateApi): # order is important
     serializer_class = ProviderSerializer
     initial_queryset = Provider.objects.all().select_related('address').prefetch_related('contacts', 'products')
     filter_function = provider_filter.filter_queryset

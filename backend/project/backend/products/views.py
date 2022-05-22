@@ -7,7 +7,7 @@ from backend.products.actions.objects.data_control.filter import product_filter
 from backend.products.actions.objects.data_control.selector import product_selector
 
 
-class ProductListAndCreate(SimpleRenderer, DataControlAndCreateApi): # order is important
+class ProductDataControlAndCreate(SimpleRenderer, DataControlAndCreateApi): # order is important
     filter_function = product_filter.filter_queryset
     selector_function = product_selector.select
     serializer_class = ProductSerializer
