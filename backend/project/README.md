@@ -10,7 +10,7 @@
 <ul>
     <li><a href="#organization">Organização</a></li>
     <li><a href="#serializers">Serializers</a></li>
-    <li><a href="#routes">Rotas</a></li>
+    <li><a href="#routes">Views e rotas</a></li>
 </ul>
 <li><a href="#use">Como usar na sua máquina</a></li>
 </ul>
@@ -47,7 +47,27 @@ PRODUCTS é onde está a configuração do projeto
 <br>
 <h3 id="serializers">Serializers</h3>
 <br>
-<h3 id="routes">Rotas</h3>
+<br>
+<h3 id="routes">Views e rotas</h3>
+<br>
+<br>
+<hr>
+<h3>CategoryListAndCreate - /categories</h3>
+<p> 
+GET: Lista categorias<br>
+POST: Cria nova categoria
+</p> 
+
+<br>
+<hr>
+<h3>CategoryDetail - /categories/[id]</h3>
+<p> 
+GET: Dados da categoria<br>
+PUT: Atualiza categoria<br>
+PATCH: Atualiza categoria<br>
+DELETE: Deleta categoria
+</p> 
+
 
 <br>
 <br>
