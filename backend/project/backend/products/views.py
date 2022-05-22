@@ -10,12 +10,12 @@ class ProductListAndCreate(DataControlAndCreateApi):
     filter_function = product_filter.filter_queryset
     selector_function = product_selector.select
     serializer_class = ProductSerializer
-    initial_queryset = Product.objects.all()
+    initial_queryset = Product.objects.all().select_related('category').prefetch_related('providers')
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().select_related('company').prefetch_related('providers')
 
 
 class CategoryListAndCreate(generics.ListCreateAPIView):
