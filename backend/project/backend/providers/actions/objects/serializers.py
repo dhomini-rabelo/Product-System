@@ -64,6 +64,9 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
             PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'}
         )
 
+    def get_list_many_relationship(self):
+        return ['contacts', 'products']
+
     def create(self, validated_data):
         # data input
         address_data = validated_data.pop('address')
@@ -86,9 +89,12 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     def update(self, instance, validated_data):
         if self.partial: return self.update_partial(instance, validated_data)
         related_fields_data, validated_data = self.get_data(instance, validated_data)
+        
         self.update_instance(instance, {**validated_data, 'address': self.error_or_update_instance_for_address(related_fields_data['address'], instance)})
         self.create_or_update_many_for_contacts(related_fields_data['contacts'])
         self.create_or_update_many_for_products(related_fields_data['products'])
+        
+        self.delete_many_instances(instance, self.get_list_many_relationship())
         return instance
 
     def update_partial(self, instance, validated_data):
@@ -104,6 +110,8 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
             self.create_or_update_many_for_products(related_fields_data['products'])
         if related_fields_data.get('contacts') not in [None, []]:
             self.create_or_update_many_for_contacts(related_fields_data['contacts'])
+
+        self.delete_many_instances(instance, self.get_list_many_relationship())
         return instance        
 
     def obj_for_get_related_field_data(self) -> dict:

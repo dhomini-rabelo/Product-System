@@ -50,6 +50,9 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
             {'id': 'id', 'product__id': 'product_id'}
         )
 
+    def get_list_many_relationship(self):
+        return ['providers']
+
     def create(self, validated_data):
         # data input
         category_data = validated_data.pop('category')
@@ -72,6 +75,7 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
         related_fields_data, validated_data = self.get_data(instance, validated_data)
         self.update_instance(instance, {**validated_data, 'category': self.get_or_error_for_category(related_fields_data['category'])})
         self.error_or_update_many_for_providers(related_fields_data['providers'])
+        self.delete_many_instances(instance, self.get_list_many_relationship())
         return instance
 
     def update_partial(self, instance, validated_data):
@@ -86,6 +90,7 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
         if related_fields_data.get('providers') not in [None, []]:
             self.error_or_update_many_for_providers(related_fields_data['providers'])
 
+        self.delete_many_instances(instance, self.get_list_many_relationship())
         return instance
 
     def obj_for_get_related_field_data(self) -> dict:

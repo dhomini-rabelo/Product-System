@@ -106,7 +106,7 @@ class SerializerSupport:
             raise ValidationError({f'delete_{related_name}': f'delete_{related_name} contains invalid id type'})
 
     def delete_instances(self, instance: Model, related_name: str, ids_for_delete: list[int]):
-        self._validate_ids_for_delete(ids_for_delete)
+        self._validate_ids_for_delete(ids_for_delete, related_name)
         objects_for_delete = []
         
         for id_for_delete in ids_for_delete:
