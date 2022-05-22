@@ -66,7 +66,7 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     def create_or_update_many_for_contacts(self, contacts_data: list[dict]):
         return self.create_or_update_many(
             contacts_data, ContactSerializer, Contact.objects.all(),
-            {'number': 'number', 'provider__id': 'provider_id'}, 
+            {'id': 'id', 'provider__id': 'provider_id'}, 
         )
 
     def create_or_update_many_for_products(self, products_data: list[dict]):
@@ -148,8 +148,8 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
     def obj_for_get_related_field_data(self) -> dict:
         def get_contacts(instance, validated_data):
             contacts_data = [{
-                'number': contact['number'], 'provider_id': instance.id,
-            }  for contact in validated_data['contacts']]
+                'id': contact.get('id'), 'number': contact['number'], 'provider_id': instance.id,
+            }  for contact in self.initial_data['contacts']]
             return contacts_data
 
         def get_products(instance, validated_data):
