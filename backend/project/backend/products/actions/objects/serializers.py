@@ -1,14 +1,25 @@
-from turtle import update
-from types import FunctionType
+from django.forms import ValidationError
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
+from Core.views.create.name import AdaptDataSerializer
 from backend.products.app.models import Category, PriceMediator, Product
+from rest_framework.fields import empty
+from rest_framework.exceptions import ErrorDetail
+from backend.providers import Provider
 
 
 
-class PriceMediatorForProductSerializer(serializers.ModelSerializer):
+class PriceMediatorForProductSerializer(AdaptDataSerializer, serializers.ModelSerializer):
     # disable require validation because works with ProductSerializer
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), required=False)
+
+    def adapt_data(self, data: dict | empty):
+        is_empty = data == empty
+        data_copy = dict(data) if not is_empty else {}
+        if isinstance(data_copy.get('provider'), str):
+            provider: Provider | None = Provider.objects.filter(name__iexact=data['provider']).first()
+            data_copy['provider'] = provider.id if provider else 0 # 0 is not possible id
+        return data_copy if not is_empty else data
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -16,13 +27,6 @@ class PriceMediatorForProductSerializer(serializers.ModelSerializer):
         del response['product']
         return response
 
-    class Meta:
-        model = PriceMediator
-        fields = 'id', 'provider', 'price', 'product'
-
-
-class PriceMediatorSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = PriceMediator
         fields = 'id', 'provider', 'price', 'product'
@@ -105,6 +109,19 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
             'category': lambda instance, validated_data : validated_data['category'],
             'providers': get_providers,            
         }
+
+    @property
+    def errors(self):
+        if not hasattr(self, '_errors'):
+            msg = 'You must call `.is_valid()` before accessing `.errors`.'
+            raise AssertionError(msg)
+
+        errors = self._errors
+
+        if errors.get('providers') == [{'provider': [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')]}]:
+            errors = {**errors, 'providers': [{'provider': [ErrorDetail(string='Provider not found', code='does_not_exist')]}]}
+
+        return errors
 
     class Meta:
         model = Product

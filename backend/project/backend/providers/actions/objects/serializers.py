@@ -1,15 +1,24 @@
-from types import FunctionType
-from venv import create
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
-from backend.products.app.models import PriceMediator
+from Core.views.create.name import AdaptDataSerializer
+from backend.products.app.models import PriceMediator, Product
 from backend.providers.app.models import Contact, Provider, Address
+from rest_framework.fields import empty
+from rest_framework.exceptions import ErrorDetail
 
 
-class PriceMediatorForProviderSerializer(serializers.ModelSerializer):
+class PriceMediatorForProviderSerializer(AdaptDataSerializer, serializers.ModelSerializer):
     # disable require validation because works with ProviderSerializer
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), required=False)
 
+    def adapt_data(self, data: dict | empty):
+        is_empty = data == empty
+        data_copy = dict(data) if not is_empty else {}
+        if isinstance(data_copy.get('product'), str):
+            product: Product | None = Product.objects.filter(name__iexact=data['product']).first()
+            data_copy['product'] = product.id if product else 0 # 0 is not possible id
+        return data_copy if not is_empty else data
+        
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['product'] = instance.product.name
@@ -132,6 +141,19 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
             'contacts': get_contacts,            
             'products': get_products,            
         }        
+
+    @property
+    def errors(self):
+        if not hasattr(self, '_errors'):
+            msg = 'You must call `.is_valid()` before accessing `.errors`.'
+            raise AssertionError(msg)
+
+        errors = self._errors
+
+        if errors.get('products') == [{'product': [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')]}]:
+            errors = {**errors, 'products': [{'product': [ErrorDetail(string='Product not found', code='does_not_exist')]}]}
+
+        return errors
 
     class Meta:
         model = Provider
