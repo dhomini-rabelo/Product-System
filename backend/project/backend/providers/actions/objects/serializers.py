@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
 from Core.views.create.name import AdaptDataSerializer
@@ -5,6 +6,7 @@ from backend.products.app.models import PriceMediator, Product
 from backend.providers.app.models import Contact, Provider, Address
 from rest_framework.fields import empty
 from rest_framework.exceptions import ErrorDetail
+import re
 
 
 class PriceMediatorForProviderSerializer(AdaptDataSerializer, serializers.ModelSerializer):
@@ -75,6 +77,26 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
 
     def get_list_many_relationship(self):
         return ['contacts', 'products']
+
+    def validate(self, data):
+        individual_validators = self.get_individual_validators()
+        for validator in individual_validators.keys():
+            if validator not in data.keys(): continue
+            validation_function = individual_validators[validator]
+            validation_function(data) # raises any error if data is not valid
+        return super().validate(data)
+
+    def get_individual_validators(self) -> dict:
+        def validate_cnpj(data):
+            if not isinstance(data.get('cnpj'), str): raise ValidationError({'cnpj': 'Not a valid string'})
+            pattern = re.compile(r'^\d{2}.\d{3}.\d{3}/\d{3}.\d{2}$') # simple regex validation for cnpj
+            match = re.fullmatch(pattern, data['cnpj'])
+            if match is None:
+                raise ValidationError({'cnpj': 'Invalid format, use XX.XXX.XXX/XXX-XX'})
+
+        return {
+            'cnpj': validate_cnpj
+        }
 
     def create(self, validated_data):
         # data input
