@@ -172,9 +172,13 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
 
         errors = self._errors
 
-        if errors.get('products') == [{'product': [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')]}]:
-            errors = {**errors, 'products': [{'product': [ErrorDetail(string='Product not found', code='does_not_exist')]}]}
+        if errors.get('products'): # list[dict]
+            def check_product_error(product: dict):
+                invalid_error = (product.get('product') == [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')])
+                return  product if not invalid_error else [ErrorDetail(string='Product not found', code='does_not_exist')]
 
+            new_products_error = map(check_product_error, errors['products'])
+            errors['products'] = list(new_products_error)
         return errors
 
     class Meta:
