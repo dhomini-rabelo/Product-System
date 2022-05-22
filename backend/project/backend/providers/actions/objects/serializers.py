@@ -52,16 +52,16 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
             address_data, Address.objects.all(), {'id': instance.address.id}, {'address': ['Id not found']}
         )
 
-    def error_or_update_many_for_contacts(self, contacts_data: dict):
-        return self.error_or_update_many(
-            contacts_data, Contact.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
-            {'contacts': ['Id not found or id is none']}
+    def create_or_update_many_for_contacts(self, contacts_data: list[dict]):
+        return self.create_or_update_many(
+            contacts_data, ContactSerializer, Contact.objects.all(),
+            {'id': 'id', 'provider__id': 'provider_id'}, 
         )
 
-    def error_or_update_many_for_products(self, products_data: dict):
-        return self.error_or_update_many(
-            products_data, PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'},
-            {'products': ['Id not found or id is none']}
+    def create_or_update_many_for_products(self, products_data: list[dict]):
+        return self.create_or_update_many(
+            products_data, PriceMediatorForProviderSerializer, 
+            PriceMediator.objects.all(), {'id': 'id', 'provider__id': 'provider_id'}
         )
 
     def create(self, validated_data):
@@ -87,8 +87,8 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
         if self.partial: return self.update_partial(instance, validated_data)
         related_fields_data, validated_data = self.get_data(instance, validated_data)
         self.update_instance(instance, {**validated_data, 'address': self.error_or_update_instance_for_address(related_fields_data['address'], instance)})
-        self.error_or_update_many_for_contacts(related_fields_data['contacts'])
-        self.error_or_update_many_for_products(related_fields_data['products'])
+        self.create_or_update_many_for_contacts(related_fields_data['contacts'])
+        self.create_or_update_many_for_products(related_fields_data['products'])
         return instance
 
     def update_partial(self, instance, validated_data):
@@ -101,9 +101,9 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
         instance.save()
 
         if related_fields_data.get('products') not in [None, []]:
-            self.error_or_update_many_for_products(related_fields_data['products'])
+            self.create_or_update_many_for_products(related_fields_data['products'])
         if related_fields_data.get('contacts') not in [None, []]:
-            self.error_or_update_many_for_contacts(related_fields_data['contacts'])
+            self.create_or_update_many_for_contacts(related_fields_data['contacts'])
         return instance        
 
     def obj_for_get_related_field_data(self) -> dict:

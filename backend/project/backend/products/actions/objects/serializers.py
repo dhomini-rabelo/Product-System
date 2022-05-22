@@ -44,10 +44,10 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
     def get_or_error_for_category(self, category_data: dict):
         return self.get_or_error(Category.objects.all(), {'name__iexact': category_data.get('name')}, {'category': ['Category not found']})
 
-    def error_or_update_many_for_providers(self, providers_data: dict):
-        return self.error_or_update_many(
-            providers_data, PriceMediator.objects.all(), {'id': 'id', 'product__id': 'product_id'},
-            {'providers': ['Id not found or id is none']}
+    def error_or_update_many_for_providers(self, providers_data: list[dict]):
+        return self.create_or_update_many(
+            providers_data, PriceMediatorForProductSerializer, PriceMediator.objects.all(),
+            {'id': 'id', 'product__id': 'product_id'}
         )
 
     def create(self, validated_data):
@@ -93,7 +93,6 @@ class ProductSerializer(serializers.ModelSerializer, SerializerSupport):
             providers_data = [{
                 'id': provider.get('id'), 'provider_id': provider['provider'], 
                 'product_id': instance.id, 'price': provider['price'],
-                'provider': None, 'product': None, 
             }  for provider in self.initial_data['providers']]
             return providers_data
 
