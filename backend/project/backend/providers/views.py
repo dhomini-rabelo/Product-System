@@ -16,23 +16,3 @@ class ProviderListAndCreate(DataControlAndCreateApi):
 class ProviderDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProviderSerializer
     queryset = Provider.objects.all()
-
-
-class ContactCreate(generics.CreateAPIView):
-    serializer_class = ContactSerializer
-    queryset = Contact.objects.all()
-
-
-class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ContactSerializer
-    queryset = Contact.objects.all()
-
-
-class AddressCreate(generics.CreateAPIView):
-    serializer_class = AddressSerializer
-    queryset = Address.objects.all()
-
-
-class AddressDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = AddressSerializer
-    queryset = Address.objects.all()

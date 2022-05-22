@@ -28,13 +28,3 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
 
 
-class PriceMediatorCreate(generics.CreateAPIView):
-    serializer_class = PriceMediatorSerializer
-    queryset = PriceMediator.objects.all()
-
-
-class PriceMediatorDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PriceMediatorSerializer
-    queryset = PriceMediator.objects.all()
-
-
