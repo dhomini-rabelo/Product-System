@@ -49,14 +49,16 @@ class SerializerSupport:
         pk_kwargs: dict = {}, instance_id: int | None = None, related_name: str = '',
     ) -> Model: # for foreign key
         relationship_instance = queryset.filter(**pk_kwargs).first()
+        delete_id = lambda key: key if not key.endswith('_id') else key[:-3] # delete _id
 
         if relationship_instance is None:
-            return self.create_instance(data, serializer_class, instance_id, related_name)
+            obj_data = {delete_id(k):v for k,v in data.items()}
+            return self.create_instance(obj_data, serializer_class, instance_id, related_name)
         return self.update_instance(relationship_instance, data)
 
     def create_or_update_many(
         self, data: list[dict], serializer_class: ModelSerializer, queryset: QuerySet,
-        pk_kwargs: dict = {},  instance_id: Model | None = None, related_name: str = ''
+        pk_kwargs: dict = {},  instance_id: int | None = None, related_name: str = ''
     ): # m2m or m2o
         for obj in data:
             adapted_kwargs = {k: obj.get(v)  for k, v in pk_kwargs.items()}
