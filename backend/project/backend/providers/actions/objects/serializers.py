@@ -2,6 +2,7 @@ from django.forms import ValidationError
 from rest_framework import serializers
 from Core.views.create.many import SerializerSupport
 from Core.views.create.name import AdaptDataSerializer
+from Core.views.create.validator import ValidatorSerializer
 from backend.products.app.models import PriceMediator, Product
 from backend.providers.app.models import Contact, Provider, Address
 from rest_framework.fields import empty
@@ -32,7 +33,22 @@ class PriceMediatorForProviderSerializer(AdaptDataSerializer, serializers.ModelS
         fields = 'id', 'product', 'price', 'provider'
 
 
-class AddressSerializer(serializers.ModelSerializer):
+class AddressSerializer(ValidatorSerializer, serializers.ModelSerializer):
+
+    def validate(self, data):
+        return self.use_individual_validation(data)
+
+    def get_individual_validators(self) -> dict:
+        def validate_cep(data: dict):
+            if not isinstance(data.get('cep'), str): raise ValidationError({'cep': 'Not a valid string'})
+            pattern = re.compile(r'^\d{5}-\d{3}$') # simple regex validation for cep XXXXX-XXX
+            match = re.fullmatch(pattern, data['cep'])
+            if match is None:
+                raise ValidationError({'cep': 'Invalid format, use XXXXX-XXX'})
+
+        return {
+            'cep': validate_cep,
+        }
     
     class Meta:
         model = Address
@@ -79,12 +95,7 @@ class ProviderSerializer(serializers.ModelSerializer, SerializerSupport):
         return ['contacts', 'products']
 
     def validate(self, data):
-        individual_validators = self.get_individual_validators()
-        for validator in individual_validators.keys():
-            if validator not in data.keys(): continue
-            validation_function = individual_validators[validator]
-            validation_function(data) # raises any error if data is not valid
-        return super().validate(data)
+        return self.use_individual_validation(data)
 
     def get_individual_validators(self) -> dict:
         def validate_cnpj(data):
