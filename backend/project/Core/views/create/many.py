@@ -98,3 +98,29 @@ class SerializerSupport:
         for obj in data:
             adapted_kwargs = {k: obj.get(v)  for k, v in pk_kwargs.items()}
             self.error_or_update_instance(obj, queryset, adapted_kwargs, error_obj)
+
+    def _validate_ids_for_delete(self, ids_for_delete: list[int], related_name: str):
+        if not isinstance(ids_for_delete, list):
+            raise ValidationError({f'delete_{related_name}': f'delete_{related_name} must be a list'})
+        if not all([isinstance(id_, int) for id_ in ids_for_delete]):
+            raise ValidationError({f'delete_{related_name}': f'delete_{related_name} contains invalid id type'})
+
+    def delete_instances(self, instance: Model, related_name: str, ids_for_delete: list[int]):
+        self._validate_ids_for_delete(ids_for_delete)
+        objects_for_delete = []
+        
+        for id_for_delete in ids_for_delete:
+            queryset = getattr(instance, related_name)
+            obj = queryset.filter(id=id_for_delete).first()
+            if obj is None: raise ValidationError({f'delete_{related_name}': f'id "{id_for_delete}" does not exist'})
+            objects_for_delete.append(obj)
+                
+        for obj in objects_for_delete:
+            obj.delete()
+
+    def delete_many_instances(self, instance: Model, fields_for_delete: list[str]):
+        for field_for_delete in fields_for_delete:
+            ids_for_delete: list[int] | None = self.initial_data.get(f'delete_{field_for_delete}')
+            if ids_for_delete is not None: self.delete_instances(instance, field_for_delete, ids_for_delete)
+                
+                
