@@ -36,7 +36,7 @@ class AddressSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Address
-        fields = 'id', 'city', 'country'
+        fields = 'id', 'cep', 'road', 'complement', 'neighborhood', 'number'
 
 
 class ContactSerializer(serializers.ModelSerializer):
