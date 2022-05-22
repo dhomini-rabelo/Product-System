@@ -1,13 +1,28 @@
 from types import FunctionType
+from typing import Union
 from rest_framework.serializers import ModelSerializer, ValidationError
 from django.db.models.query import QuerySet
 from django.db.models import Model
+from abc import ABC
+
 
 
 class ManyChildSerializers:
+    """
+    This class helps to use children serializers
+    """
 
-    def get_data(self, instance, validated_data: dict):
-        # require self.obj_for_get_related_field_data -> dict[FunctionType]
+    def get_data(self, instance: Model, validated_data: dict) -> tuple[Union[dict[str, Union[list[dict], dict]], dict]]:
+        """
+        Get body data for related fields
+
+        Args:
+            instance (Model): current model serializer instance
+            validated_data (dict): cleaned body data
+
+        require: 
+            self.obj_for_get_related_field_data -> dict[str, FunctionType(instance, validated_data) => dict[str, Union[list[dict], dict]]
+        """
         related_functions, related_fields_data = self.obj_for_get_related_field_data(), {}
         for related_field in related_functions.keys():
             if related_field not in validated_data.keys(): continue

@@ -7,24 +7,24 @@ from backend.products.actions.objects.data_control.filter import product_filter
 from backend.products.actions.objects.data_control.selector import product_selector
 
 
-class ProductListAndCreate(SimpleRenderer, DataControlAndCreateApi):
+class ProductListAndCreate(SimpleRenderer, DataControlAndCreateApi): # order is important
     filter_function = product_filter.filter_queryset
     selector_function = product_selector.select
     serializer_class = ProductSerializer
     initial_queryset = Product.objects.all().select_related('category').prefetch_related('providers')
 
 
-class ProductDetail(SimpleRenderer, generics.RetrieveUpdateDestroyAPIView):
+class ProductDetail(SimpleRenderer, generics.RetrieveUpdateDestroyAPIView): # order is important
     serializer_class = ProductSerializer
     queryset = Product.objects.all().select_related('category').prefetch_related('providers')
 
 
-class CategoryListAndCreate(SimpleRenderer, generics.ListCreateAPIView):
+class CategoryListAndCreate(SimpleRenderer, generics.ListCreateAPIView): # order is important
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
 
-class CategoryDetail(SimpleRenderer, generics.RetrieveUpdateDestroyAPIView):
+class CategoryDetail(SimpleRenderer, generics.RetrieveUpdateDestroyAPIView): # order is important
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 

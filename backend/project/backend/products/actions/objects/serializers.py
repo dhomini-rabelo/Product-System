@@ -10,7 +10,7 @@ from backend.providers import Provider
 
 
 class PriceMediatorForProductSerializer(AdaptDataSerializer, serializers.ModelSerializer):
-    # disable require validation because works with ProductSerializer
+    # disable require validation because works with ProductSerializer and raises error before adapt data
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), required=False)
 
     def adapt_data(self, data: dict | empty):
@@ -33,7 +33,14 @@ class PriceMediatorForProductSerializer(AdaptDataSerializer, serializers.ModelSe
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    # disable unique validation because works with ProductSerializer
+    
+    class Meta:
+        model = Category
+        fields = 'id', 'name',
+
+
+class CategoryForProductSerializer(serializers.ModelSerializer):
+    # disable unique validation because works with ProductSerializer and raises error before to process
     name = serializers.CharField(max_length=200, validators=[])
     
     class Meta:
@@ -43,7 +50,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
     providers = PriceMediatorForProductSerializer(many=True)
-    category = CategorySerializer()
+    category = CategoryForProductSerializer()
 
     def get_or_error_for_category(self, category_data: dict):
         return self.get_or_error(Category.objects.all(), {'name__iexact': category_data.get('name')}, {'category': ['Category not found']})
@@ -55,6 +62,7 @@ class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
         )
 
     def get_list_many_relationship(self):
+        # for delete m2m relationship fields
         return ['providers']
 
     def create(self, validated_data):
@@ -98,6 +106,7 @@ class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
         return instance
 
     def obj_for_get_related_field_data(self) -> dict:
+        # see ManyChildSerializers.get_data 
         def get_providers(instance, validated_data):
             providers_data = [{
                 'provider_id': provider['provider'], 
@@ -116,6 +125,7 @@ class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
             msg = 'You must call `.is_valid()` before accessing `.errors`.'
             raise AssertionError(msg)
 
+        # edit
         errors = self._errors
 
         if errors.get('providers'): # list[dict]

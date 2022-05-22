@@ -11,7 +11,7 @@ import re
 
 
 class PriceMediatorForProviderSerializer(AdaptDataSerializer, serializers.ModelSerializer):
-    # disable require validation because works with ProviderSerializer
+    # disable require validation because works with ProviderSerializer and raises error before adapt data
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), required=False)
 
     def adapt_data(self, data: dict | empty):
@@ -56,7 +56,7 @@ class AddressSerializer(ValidatorSerializer, serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    # disable require validation because works with ProviderSerializer
+    # disable require validation because works with ProviderSerializer and raises error before to process
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all(), required=False)
     
     def to_representation(self, instance):
@@ -92,6 +92,7 @@ class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers):
         )
 
     def get_list_many_relationship(self):
+        # for delete m2m relationship fields
         return ['contacts', 'products']
 
     def validate(self, data):
@@ -157,10 +158,11 @@ class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers):
         return instance        
 
     def obj_for_get_related_field_data(self) -> dict:
+        # see ManyChildSerializers.get_data 
         def get_contacts(instance, validated_data):
             contacts_data = [{
                 'id': contact.get('id'), 'number': contact['number'], 'provider_id': instance.id,
-            }  for contact in self.initial_data['contacts']]
+            }  for contact in self.initial_data['contacts']] # select contact for edit from id 
             return contacts_data
 
         def get_products(instance, validated_data):

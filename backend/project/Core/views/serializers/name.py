@@ -1,8 +1,15 @@
 from rest_framework.fields import empty
+from abc import ABC
 
 
 class AdaptDataSerializer:
-    # require self.adapt_data
+    """
+    This class adapts body data received
+
+    require:
+        self.adapt_data : FunctionType(data: body_data) => adapted_data
+    """
+
     def __init__(self, instance=None, data=empty, **kwargs):
         obj_data = self.adapt_data(data)
         super().__init__(instance, obj_data, **kwargs)

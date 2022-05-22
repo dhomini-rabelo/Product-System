@@ -5,6 +5,7 @@ from rest_framework import status
 
 
 class DataControlAndCreateApi(DataControlApi):
+    # data control with post method
 
     def post(self, request):
         SerializerClass = self.get_serializer_class()
