@@ -12,21 +12,22 @@ from backend.providers.app.models import Address, Provider
 
 class BaseClassForTest(TestCase):
 
-    def create_data(self):
+    def create_models(self):
         categories = [Category(name=name) for name in ['tecnologia', 'esporte', 'casa']]
         Category.objects.bulk_create(categories)
 
-        providers, addresses, products = [], []
+        providers, addresses, products = [], [], []
         for i in range(1, 11):
+            n = lambda : randint(1, 99999999999999999999)
 
             products.append(Product(
-                name=f'product {i}',
+                name=f'product {n()}',
                 description=f'product description {i}',
                 category=categories[randint(0, len(categories) - 1)]
             ))
 
             provider = Provider(
-                name=f'provider {i}',
+                name=f'provider {n()}',
                 social_role=f'provider social_role {i}',
                 cnpj=f'{randint(10, 99)}.{randint(100, 999)}.{randint(100, 999)}/{randint(100, 999)}-{randint(10, 99)}'
             )
@@ -53,5 +54,8 @@ class BaseClassForTest(TestCase):
                 provider_id=i,
                 price=Decimal(f'{randint(100, 100000)}.00')
             )
+
+    def get_header(self):
+        return {'content_type': 'application/json'}
 
         
