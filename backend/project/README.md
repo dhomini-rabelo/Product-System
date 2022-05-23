@@ -63,7 +63,7 @@ POST: Cria nova categoria
 <h3>CategoryDetail - /categories/[id]</h3>
 <p> 
 GET: Dados da categoria<br>
-PUT: Atualiza categoria<br>
+PUT: Atualiza todos os campos de categoria<br>
 PATCH: Atualiza categoria<br>
 DELETE: Deleta categoria
 </p> 
@@ -74,6 +74,24 @@ DELETE: Deleta categoria
 <p> 
 GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
 POST: Cria novo produto
+</p> 
+
+<br>
+<hr>
+<h3>ProductDetail - /products/[id]</h3>
+<p> 
+GET: Dados da produto<br>
+PUT: Atualiza todos os campos de produto | PATCH: Atualiza produto<br>
+Altera categoria | cria, altera e deleta fornecedores<br>
+DELETE: Deleta produto
+</p> 
+
+<br>
+<hr>
+<h3>ProviderDataControlAndCreate - /providers</h3>
+<p> 
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+POST: Cria novo fornecedor
 </p> 
 
 

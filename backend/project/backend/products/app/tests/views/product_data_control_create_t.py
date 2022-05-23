@@ -58,7 +58,7 @@ class ProductDataControlAndCreateTest(BaseClassForTest):
         self.assertEqual(request.status_code, 400)
         self.assertEqual(request.data['category'], ['Category not found'])
 
-    def test_product_not_found_error(self):
+    def test_provider_not_found_error(self):
         data = self.valid_data.copy()
         data['providers'] = [{'price': Decimal('1000.50'), 'provider': 'invalid_provider_name'}]
         request = self.client.post(self.path, data=data, **self.header)
