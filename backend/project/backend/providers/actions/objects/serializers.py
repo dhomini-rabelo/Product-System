@@ -69,7 +69,7 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = 'id', 'number', 'provider'
 
 
-class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers):
+class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers, ValidatorSerializer):
     address = AddressSerializer()
     contacts = ContactSerializer(many=True)
     products = PriceMediatorForProviderSerializer(many=True)
@@ -167,7 +167,7 @@ class ProviderSerializer(serializers.ModelSerializer, ManyChildSerializers):
 
         def get_products(instance, validated_data):
             products_data = [{
-                'product_id': product['product'], 'price': product['price'], 'provider_id': instance.id,
+                'product_id': product['product'].id, 'price': product['price'], 'provider_id': instance.id,
             }  for product in validated_data['products']]
             return products_data
 

@@ -109,9 +109,9 @@ class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
         # see ManyChildSerializers.get_data 
         def get_providers(instance, validated_data):
             providers_data = [{
-                'provider_id': provider['provider'], 
+                'provider_id': provider['provider'].id, 
                 'product_id': instance.id, 'price': provider['price'],
-            }  for provider in validated_data]
+            }  for provider in validated_data['providers']]
             return providers_data
 
         return {

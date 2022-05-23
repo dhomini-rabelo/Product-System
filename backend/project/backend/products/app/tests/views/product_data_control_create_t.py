@@ -14,7 +14,7 @@ from django.db.models import Q
 
 
 
-class CategoryListAndCreateTest(BaseClassForTest):
+class ProductDataControlAndCreateTest(BaseClassForTest):
     
     @classmethod
     def setUpTestData(cls):
