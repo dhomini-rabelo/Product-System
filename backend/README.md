@@ -1,37 +1,145 @@
-# Teste Dev
+<h1>Sistema de produtos</h1>
+<p>API para gerenciar sistema de produtos</p>
 
-Esse teste visa avaliar o conhecimento sobre os recursos disponíveis no framework Django entre outras tecnologias voltadas para desenvolvimento web. Por isso, utilize o máximo de recursos presentes deste framework.
+<br>
+<h2>🔗 Tópicos</h2>
+<ul>
+<li><a href="#tools">Ferramentas</a></li>
+<li><a href="#db">Banco de dados</a></li>
+<li><a href="#doc">Documentação</a></li>
+<ul>
+    <li><a href="#organization">Organização</a></li>
+    <li><a href="#serializers">Serializers</a></li>
+    <li><a href="#routes">Views e rotas</a></li>
+</ul>
+<li><a href="#use">Como usar na sua máquina</a></li>
+</ul>
 
-## Sistema de cadastro de produtos e fornecedores
+<br>
+<h2 id="tools">🛠️ Ferramentas</h2>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/4.0/">Django</a></li>
+<li><a href="https://www.django-rest-framework.org/">Django Rest Framework</a></li>
+<li><a href="https://github.com/dhomini-rabelo/Fast">Fast</a></li>
+<li><a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a></li>
+</ul>
+
+<br>
+<h2 id="db">🏷️ Modelagem do banco de dados</h2>
+
+<br>
+<h2 id="doc">📖 Documentação</h2>
+<br>
+<h3 id="organization">Organização</h2>
+
+<ul>
+<li>
+Os padrões principais do projeto estão na pasta project/Core
+</li>
+<li>
+Os apps estão na pasta project/backend
+</li>
+<li>
+PRODUCTS é onde está a configuração do projeto
+</li>
+</ul>
+<br>
+<h3 id="serializers">Serializers</h3>
+<br>
+<br>
+<h3 id="routes">Views e rotas</h3>
+<p>Note que nas imagens e gifts também contêm os erros</p>
+<br>
+<br>
+<hr>
+<h3>CategoryListAndCreate - /categories</h3>
+<p> 
+GET: Lista categorias<br>
+POST: Cria nova categoria
+</p>
+<br>
+<kbd><img src='./readme/categories/list.gif'></kbd>
+
+<br>
+<br>
+<hr>
+<h3>CategoryDetail - /categories/[id]</h3>
+<p> 
+GET: Dados da categoria<br>
+PUT: Atualiza todos os campos de categoria<br>
+PATCH: Atualiza categoria<br>
+DELETE: Deleta categoria
+</p> 
+<br>
+<kbd><img src='./readme/categories/detail.gif'></kbd>
+
+<br>
+<br>
+<hr>
+<h3>ProductDataControlAndCreate - /products</h3>
+<p> 
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+POST: Cria novo produto com ou sem fornecedor(es)
+</p> 
+<br>
+<kbd><img src='./readme/products/list.gif'></kbd>
+
+<br>
+<br>
+<hr>
+<h3>ProductDetail - /products/[id]</h3>
+<p> 
+GET: Dados da produto<br>
+PUT: Atualiza todos os campos de produto | PATCH: Atualiza produto<br>
+Altera categoria | cria, altera e deleta fornecedores<br>
+DELETE: Deleta produto
+</p> 
+
+<br>
+<kbd><img src='./readme/products/detail.gif'></kbd>
+<br>
 
 
-Crie uma aplicação para cadastro de produtos, onde o mesmo deverá conter uma **categoria** e poderá ter vários **fornecedores**. Em cada fornecedor o preço de cada produto poderá variar. Sendo assim, junto com a informação de qual fornecedor oferece determinado produto, precisamos também saber o preço do mesmo com este fornecedor.
-
-Tenha cuidado de não permitir que nenhum nome de **categoria** ou **produto** seja duplicado nesta aplicação. Da mesma forma, não queremos CNPJ incompletos ou inválidos sendo cadastrados na base de dados. 
-
-Precisamos que os dados sejam retornados em *endpoints* específicos para cada uma das entidades citadas. O retorno deve ser em JSON. 
-
-Lembre-se de manter um padrão, para que os dados sejam facilmente consumidos em qualquer aplicação.
-
-
-**NOTA**: Esteja livre para usar quaisquer recursos do Django, bem como instalar bibliotecas para auxiliar na criação da sua aplicação.
-
-### Seu objetivo
+<br>
+<br>
+<hr>
+<h3>ProviderDataControlAndCreate - /providers</h3>
+<p> 
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+POST: Cria novo fornecedor
+</p> 
+<br>
+<kbd><img src='./readme/providers/list.gif'></kbd>
 
 
-- Criar endpoints para CRUD de **produtos**. O produto deve conter nome, data de cadastro, data de atualização e descrição. O `nome` do **produto** deve ser único e não pode ultrapassar 200 caracteres, porém a `descrição` é opcional e deve permitir inserir um texto longo.
+<br>
+<br>
+<hr>
+<h3>ProviderDetail - /providers/[id]</h3>
+<p> 
+GET: Dados da fornecedor<br>
+PUT: Atualiza todos os campos de fornecedor | PATCH: Atualiza fornecedor<br>
+Altera address | cria, altera e deleta fornecedores ou contatos<br>
+DELETE: Deleta fornecedor
+</p> 
+<br>
+<kbd><img src='./readme/providers/detail.gif'></kbd>
 
-- Um **produto** sempre deverá ter uma **categoria**.
+<br>
+<br>
+<br>
+<h2 id="use">🚀 Como usar na sua máquina</h2>
 
+<h3>Depois de clonar o projeto basta apenas seguir os comandos abaixo.</h3>
+<br>
 
-- Um **produto** deverá ter vários **fornecedores**. E em cada **fornecedor**, deverá ser informado o preço de custo do produto com este fornecedor. Da mesma forma, o **fornecedor** poderá conter vários **produtos**.
-
-- Criar endpoints para CRUD de **categorias**. A categoria deve conter nome, data de cadastro e data de atualização. O nome da categoria deve ser única.
-
-- Criar endpoins para CRUD de **fornecedores**, com Nome Fantasia, Razão Social, Endereço, CNPJ e Telefones para contato. A forma de organização do endereço e telefones fica a seu critério em relação a estrutura de dados (tabelas adicionais ou campos separados). Porém, os mesmos precisam sempre ser retornados junto com os dados fornecedor.
-
-
-- Quando houver algum erro na validação dos dados, isso precisa ser informado no endpoint em que ocorreu.
-
-
-**NOTA**: Ao finalizar o teste manda para o github e nos encaminha o link.
+```
+cd backend
+python -m venv venv
+venv/Scripts/Activate.ps1 # if use PowerShell
+pip install -r requirements.txt
+pip freeze > requirements.txt
+cd project
+python manage.py runserver
+```
