@@ -19,10 +19,10 @@
 <h2 id="tools">🛠️ Ferramentas</h2>
 
 <ul>
-<li><a href="https://docs.djangoproject.com/en/4.0/">Django</a></li>
-<li><a href="https://www.django-rest-framework.org/">Django Rest Framework</a></li>
-<li><a href="https://github.com/dhomini-rabelo/Fast">Fast</a></li>
-<li><a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.0/" target="_blank">Django</a></li>
+<li><a href="https://www.django-rest-framework.org/" target="_blank">Django Rest Framework</a></li>
+<li><a href="https://github.com/dhomini-rabelo/Fast" target="_blank">Fast</a></li>
+<li><a href="https://github.com/dhomini-rabelo/Rest-Full-Control" target="_blank">Rest-Full-Control</a></li>
 </ul>
 
 <br>
@@ -134,7 +134,7 @@ DELETE: Deleta categoria
 <hr>
 <h3>ProductDataControlAndCreate - /products</h3>
 <p> 
-GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control" target="_blank">Rest-Full-Control</a><br>
 POST: Cria novo produto com ou sem fornecedor(es)
 </p> 
 <br>
@@ -165,7 +165,7 @@ DELETE: Deleta produto
 <hr>
 <h3>ProviderDataControlAndCreate - /providers</h3>
 <p> 
-GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control" target="_blank">Rest-Full-Control</a><br>
 POST: Cria novo fornecedor
 </p> 
 <br>
@@ -205,7 +205,7 @@ python manage.py test --pattern="*_t.py"
 <br>
 <h2 id="use">🚀 Como usar na sua máquina</h2>
 
-<h3>Depois de clonar o projeto basta apenas seguir os comandos abaixo.</h3>
+<h3>Depois de clonar o projeto basta apenas preencher o arquivo .env.dev e renomeá-lo para .env e seguir os comandos abaixo.</h3>
 <br>
 
 ```
