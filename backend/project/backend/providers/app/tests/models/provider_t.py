@@ -13,28 +13,33 @@ from test.backend.base import BaseClassForTest
 
 
 
-class ProductModelTest(BaseClassForTest):
+class ProviderModelTest(BaseClassForTest):
 
     @classmethod
     def setUpTestData(cls):
         cls.create_models(cls)
 
-    def test_description_for_null_value(self):
-        self.products[1].description = None
-        self.products[1].save()
+    def test_social_role_for_null_value(self):
+        self.providers[1].social_role = None
+        self.providers[1].save()
 
     @expectedFailure
     def test_name_error_for_null_value(self):
-        self.products[1].name = None
-        self.products[1].save()
+        self.providers[1].name = None
+        self.providers[1].save()
 
     @expectedFailure
     def test_unique_name_error(self):
-        self.products[1].name = self.products[2].name
-        self.products[1].save()
+        self.providers[1].name = self.providers[2].name
+        self.providers[1].save()
 
-    def test_one_to_many_relationship_with_Product_model(self):
-        self.assertEqual(self.products[1].category, Category.objects.get(id=self.products[1].category.id))
+    @expectedFailure
+    def test_unique_cnpj_error(self):
+        self.providers[1].cnpj = self.providers[2].cnpj
+        self.providers[1].save()
+
+    def test_one_to_one_relationship_with_Address_model(self):
+        self.assertEqual(self.providers[1].address, Address.objects.get(id=self.providers[1].address.id))
 
     def test_many_to_one_relationship_with_Price_Mediator_model(self):
-        self.assertEqual(list(self.products[1].providers.all()), list(PriceMediator.objects.filter(product__id=self.products[1].id)))
+        self.assertEqual(list(self.providers[1].products.all()), list(PriceMediator.objects.filter(provider__id=self.providers[1].id)))
