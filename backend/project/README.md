@@ -68,6 +68,14 @@ PATCH: Atualiza categoria<br>
 DELETE: Deleta categoria
 </p> 
 
+<br>
+<hr>
+<h3>ProductDataControlAndCreate - /products</h3>
+<p> 
+GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="https://github.com/dhomini-rabelo/Rest-Full-Control">Rest-Full-Control</a><br>
+POST: Cria novo produto
+</p> 
+
 
 <br>
 <br>

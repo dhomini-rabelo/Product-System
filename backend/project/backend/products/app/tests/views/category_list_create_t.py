@@ -40,6 +40,11 @@ class CategoryListAndCreateTest(BaseClassForTest):
         request = self.client.post(self.path, data=self.valid_data, **self.header)
         self.assertEqual(request.status_code, 201)
 
+    @expectedFailure
+    def test_unique_name_error(self):
+        request = self.client.post(self.path, data={'name': self.categories[3].name}, **self.header)
+        self.assertEqual(request.status_code, 500)
+
     def test_error_required_name_field(self):
         request = self.client.post(self.path, data={}, **self.header)
         self.assertEqual('This field is required.', str(request.data['name'][0]))

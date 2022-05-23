@@ -130,7 +130,10 @@ class ProductSerializer(serializers.ModelSerializer, ManyChildSerializers):
 
         if errors.get('providers'): # list[dict]
             def check_provider_error(provider: dict):
-                invalid_error = (provider.get('provider') == [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')])
+                try:
+                    invalid_error = (provider.get('provider') == [ErrorDetail(string='Invalid pk "0" - object does not exist.', code='does_not_exist')])
+                except AttributeError:
+                    return provider
                 return  provider if not invalid_error else [ErrorDetail(string='Provider not found', code='does_not_exist')]
 
             new_providers_error = map(check_provider_error, errors['providers'])
