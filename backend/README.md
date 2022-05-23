@@ -9,9 +9,9 @@
 <li><a href="#doc">Documentação</a></li>
 <ul>
     <li><a href="#organization">Organização</a></li>
-    <li><a href="#serializers">Serializers</a></li>
     <li><a href="#routes">Views e rotas</a></li>
 </ul>
+<li><a href="#tests">Testes</a></li>
 <li><a href="#use">Como usar na sua máquina</a></li>
 </ul>
 
@@ -101,13 +101,11 @@ Os apps estão na pasta project/backend
 PRODUCTS é onde está a configuração do projeto
 </li>
 </ul>
+
 <br>
-<h3 id="serializers">Serializers</h3>
-<br>
-<br>
+<hr>
 <h3 id="routes">Views e rotas</h3>
 <p>Note que nas imagens e gifts também contêm os erros</p>
-<br>
 <br>
 <hr>
 <h3>CategoryListAndCreate - /categories</h3>
