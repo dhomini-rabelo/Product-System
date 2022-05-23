@@ -61,9 +61,12 @@ class ProductSerializerTest(BaseClassForTest):
             'providers': [{
                     "id": price.id,
                     "provider": price.provider.name,
-                    "price": price.price
+                    "price": str(price.price)
             } for price in self.products[1].providers.all()]
         }
+        data = self.serializer.data.copy()
+        data['category'] = dict(data['category'])
+        data['providers'] = [dict(product) for product in data['providers']]
         self.assertEqual(self.serializer.data, product)
 
     def test_error_required_name_field(self):

@@ -1,4 +1,4 @@
-<h1>Sistema de produtos</h1>
+<h1>Sistema de produtos - Backend</h1>
 <p>API para gerenciar sistema de produtos</p>
 
 <br>
@@ -28,6 +28,63 @@
 <br>
 <h2 id="db">🏷️ Modelagem do banco de dados</h2>
 
+
+<h3>User</h3>
+<ul>
+<li>Username ( gerenciada pelo AbstractUser do Django )</li>
+<li>Senha ( gerenciada pelo AbstractUser do Django )</li>
+<li>Nome</li>
+<li>Email</li>
+</ul>
+
+<h3>Categoria</h3>
+<ul>
+<li>Nome UNIQUE</li>
+<li>Data de criação</li>
+<li>Data de atualização</li>
+</ul>
+
+<h3>Produto</h3>
+<ul>
+<li>Nome UNIQUE</li>
+<li>Descrição OP</li>
+<li>Categoria FK</li>
+<li>Data de criação</li>
+<li>Data de atualização</li>
+</ul>
+
+<h3>Mediador de preços</h3>
+<ul>
+<li>Produto FK</li>
+<li>Fornecedor FK</li>
+<li>Preço</li>
+</ul>
+
+<h3>Endereço</h3>
+<ul>
+<li>Cep</li>
+<li>Rua</li>
+<li>Bairro</li>
+<li>Complemento OP</li>
+<li>Número OP</li>
+</ul>
+
+<h3>Fornecedor</h3>
+<ul>
+<li>Nome UNIQUE</li>
+<li>Razão social OP</li>
+<li>Cnpj</li>
+<li>Endereço o2o</li>
+</ul>
+
+
+<h3>Contato</h3>
+<ul>
+<li>Fornecedor FK</li>
+<li>Número</li>
+</ul>
+
+<br>
 <br>
 <h2 id="doc">📖 Documentação</h2>
 <br>
@@ -93,6 +150,10 @@ POST: Cria novo produto com ou sem fornecedor(es)
 GET: Dados da produto<br>
 PUT: Atualiza todos os campos de produto | PATCH: Atualiza produto<br>
 Altera categoria | cria, altera e deleta fornecedores<br>
+Para alterar categoria basta indicar nome de outra categoria já cadastrada<br>
+Para criar um fornecedor basta apenas indicar o nome ( ou id ) do novo fornecedor e o preço do produto<br>
+Para alterar um fornecedor basta apenas indicar o nome ( ou id ) do fornecedor e o novo preço do produto<br>
+Para deletar um fornecedor indique os ids para serem deletados em um array no campo "delete_providers"<br>
 DELETE: Deleta produto
 </p> 
 
@@ -120,7 +181,13 @@ POST: Cria novo fornecedor
 <p> 
 GET: Dados da fornecedor<br>
 PUT: Atualiza todos os campos de fornecedor | PATCH: Atualiza fornecedor<br>
-Altera address | cria, altera e deleta fornecedores ou contatos<br>
+Altera endereço | cria, altera e deleta fornecedores ou contatos<br>
+Para criar um produto basta apenas indicar o nome ( ou id ) do novo produto e o preço do produto<br>
+Para alterar um produto basta apenas indicar o nome ( ou id ) do produto e o novo preço do produto<br>
+Para deletar um produto indique os ids para serem deletados em um array no campo "delete_products"<br>
+Para criar um contato apenas indique um número novo<br>
+Para alterar um contato apenas indique um número novo e o id do contato que quer alterar<br>
+Para deletar um contato indique os ids para serem deletados em um array no campo "delete_contacts"<br>
 DELETE: Deleta fornecedor
 </p> 
 <br>
@@ -128,6 +195,15 @@ DELETE: Deleta fornecedor
 
 <br>
 <br>
+<h2 id="tests">🧪 Testes</h2>
+
+```
+python manage.py test --pattern="*_t.py"
+```
+
+<br>
+<kbd><img src='./readme/test.PNG'></kbd>
+
 <br>
 <h2 id="use">🚀 Como usar na sua máquina</h2>
 
