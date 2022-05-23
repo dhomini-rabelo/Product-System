@@ -7,5 +7,5 @@ app_name = 'providers'
 
 urlpatterns = [
     path('providers', ProviderDataControlAndCreate.as_view(), name='provider_list'),
-    path('providers/<int:pk>', ProviderDetail.as_view()),
+    path('providers/<int:pk>', ProviderDetail.as_view(), name='provider_detail'),
 ]

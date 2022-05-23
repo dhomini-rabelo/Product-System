@@ -94,6 +94,15 @@ GET: Lista produtos, seleciona campos desejados e faz filtros, usando <a href="h
 POST: Cria novo fornecedor
 </p> 
 
+<br>
+<hr>
+<h3>ProviderDetail - /providers/[id]</h3>
+<p> 
+GET: Dados da fornecedor<br>
+PUT: Atualiza todos os campos de fornecedor | PATCH: Atualiza fornecedor<br>
+Altera address | cria, altera e deleta fornecedores ou contatos<br>
+DELETE: Deleta fornecedor
+</p> 
 
 <br>
 <br>
