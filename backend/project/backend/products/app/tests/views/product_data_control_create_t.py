@@ -70,3 +70,10 @@ class ProductDataControlAndCreateTest(BaseClassForTest):
         required_fields = ['name', 'category']
         for field_name in required_fields:
             self.assertEqual('This field is required.', str(request.data[field_name][0]))
+
+    def test_unique_name_error(self):
+        data =self.valid_data.copy()
+        data = {'name': self.products[9].name}
+        request = self.client.post(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['name'][0]), 'product with this name already exists.')

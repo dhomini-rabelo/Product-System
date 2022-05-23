@@ -92,3 +92,9 @@ class ProductDetail(BaseClassForTest):
     def test_provider_not_found_error(self):
         request = self.client.patch(self.path, data={'providers': [{'provider': 'not_found_name', 'price': '50.00'}]}, **self.header)
         self.assertEqual(str(request.data['providers'][0][0]), 'Provider not found')
+
+    def test_unique_name_error(self):
+        data = {'name': self.products[9].name}
+        request = self.client.patch(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['name'][0]), 'product with this name already exists.')

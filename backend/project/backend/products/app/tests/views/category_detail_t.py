@@ -57,3 +57,9 @@ class CategoryListAndCreateTest(BaseClassForTest):
     def test_put_error_required_name_field(self):
         request = self.client.put(self.path, data={}, **self.header)
         self.assertEqual('This field is required.', str(request.data['name'][0]))
+
+    def test_unique_name_error(self):
+        data = {'name': self.categories[2].name}
+        request = self.client.patch(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['name'][0]), 'category with this name already exists.')

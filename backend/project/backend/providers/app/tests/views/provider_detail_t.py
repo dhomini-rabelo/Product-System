@@ -82,6 +82,18 @@ class ProviderDetail(BaseClassForTest):
         request = self.client.patch(self.path, data=data, **self.header)
         self.assertIn(new_product_data, [{'product': product['product'], 'price': product['price']} for product in request.data['products']])
 
+    def test_unique_name_error(self):
+        data = {'name': self.providers[1].name}
+        request = self.client.patch(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['name'][0]), 'provider with this name already exists.')
+
+    def test_unique_cnpj_error(self):
+        data = {'cnpj': self.providers[1].cnpj}
+        request = self.client.patch(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['cnpj'][0]), 'provider with this cnpj already exists.')
+
     def test_required_field_error(self):
         request = self.client.put(self.path, data={}, **self.header)
         required_fields = ['name', 'cnpj', 'address']

@@ -87,3 +87,17 @@ class ProviderDataControlAndCreateTest(BaseClassForTest):
         request = self.client.post(self.path, data=data, **self.header)
         self.assertEqual(request.status_code, 400)
         self.assertEqual(str(request.data['address']['cep'][0]), 'Invalid format, use XXXXX-XXX')
+
+    def test_unique_name_error(self):
+        data = self.valid_data.copy()
+        data = {'name': self.providers[1].name}
+        request = self.client.post(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['name'][0]), 'provider with this name already exists.')
+
+    def test_unique_cnpj_error(self):
+        data = self.valid_data.copy()
+        data = {'cnpj': self.providers[1].cnpj}
+        request = self.client.post(self.path, data=data, **self.header)
+        self.assertEqual(request.status_code, 400)
+        self.assertEqual(str(request.data['cnpj'][0]), 'provider with this cnpj already exists.')
