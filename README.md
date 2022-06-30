@@ -92,13 +92,13 @@
 
 <ul>
 <li>
-Os padrões principais do projeto estão na pasta project/Core
+Os padrões principais do projeto estão na pasta backend/project/Core
 </li>
 <li>
 Os apps estão na pasta backend/project/backend
 </li>
 <li>
-PRODUCTS é onde está a configuração do projeto
+backend/PRODUCTS é onde está a configuração do projeto
 </li>
 </ul>
 
