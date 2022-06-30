@@ -95,7 +95,7 @@
 Os padrões principais do projeto estão na pasta project/Core
 </li>
 <li>
-Os apps estão na pasta project/backend
+Os apps estão na pasta backend/project/backend
 </li>
 <li>
 PRODUCTS é onde está a configuração do projeto
